@@ -1,0 +1,15 @@
+# 1. 在本地資料夾初始化
+git init
+
+# 2. 建立遠端連結 (請替換成您的 GitHub 網址)
+git remote add origin https://github.com/您的帳號/wealth-sense-ai.git
+
+# 3. 加入所有檔案
+git add .
+
+# 4. 提交紀錄
+git commit -m "Initial commit"
+
+# 5. 推送到 GitHub
+git branch -M main
+git push -u origin main
