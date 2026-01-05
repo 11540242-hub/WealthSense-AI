@@ -1,15 +1,62 @@
-# 1. 在本地資料夾初始化
-git init
+name: Build and Deploy WealthSense AI
 
-# 2. 建立遠端連結 (請替換成您的 GitHub 網址)
-git remote add origin https://github.com/您的帳號/wealth-sense-ai.git
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-# 3. 加入所有檔案
-git add .
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
-# 4. 提交紀錄
-git commit -m "Initial commit"
+jobs:
+  build:
+    name: Build Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-# 5. 推送到 GitHub
-git branch -M main
-git push -u origin main
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-dist
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website-dist
+          path: dist
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          clean: true
