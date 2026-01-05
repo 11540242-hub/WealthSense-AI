@@ -1,0 +1,5 @@
+{
+  "name": "WealthSense AI - 個人化財務管理系統",
+  "description": "一個結合 Gemini AI 的智慧型個人財務管理系統，支援多帳戶管理、收支追蹤、分類統計以及 AI 財務建議。具備展示模式與 Firebase 正式模式切換功能。",
+  "requestFramePermissions": []
+}
